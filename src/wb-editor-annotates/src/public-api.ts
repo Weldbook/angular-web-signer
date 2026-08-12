@@ -1,0 +1,11 @@
+export * from './lib/editor-annotate/editor-annotate.module';
+export { EditorAnnotates } from './lib/editor-annotate/editorAnnotates';
+export { UI } from './lib/editor-annotate/UI';
+export { Pen } from './lib/editor-annotate/UI/pen';
+export { Line } from './lib/editor-annotate/UI/line';
+export { TextE } from './lib/editor-annotate/UI/text';
+export { Rect } from './lib/editor-annotate/UI/rect';
+export { Edit } from './lib/editor-annotate/UI/edit';
+export { Point } from './lib/editor-annotate/UI/point';
+export { Stamp } from './lib/editor-annotate/UI/stamp';
+export { Render } from './lib/editor-annotate/renderSvg/render';

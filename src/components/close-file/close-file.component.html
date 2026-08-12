@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="logo">
+    <mat-icon id="logo-min" [svgIcon]="'appSvg:logo-min'"></mat-icon>
+  </div>
+  <span class="title">
+    Вы уверены, что хотите закрыть и не сохранять файл?
+  </span>
+  <div class="close">
+    <button (click)="close(false)" backgroundColor="white">Нет</button>
+  </div>
+  <div class="accept">
+    <button (click)="close(true)">Да</button>
+  </div>
+</div>

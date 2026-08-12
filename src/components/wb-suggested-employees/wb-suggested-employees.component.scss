@@ -1,0 +1,92 @@
+.suggestedRow {
+  height: 45px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  border: 2px solid #01b28677;
+  border-radius: 5px;
+  margin: 10px 0;
+  margin-right: 10px;
+  &:hover {
+    border: 2px solid #01b286;
+  }
+  &.chosen {
+    background-color: #01b286;
+  }
+}
+.submitBtn, .cancelBtn{
+  height:45px;
+  width: 135px;
+  margin: 0 20px;
+  font-weight: bold;
+  border-radius: 22px;
+  border-width: 2px;
+  border-style: solid;
+
+}
+.cancelBtn{
+  background-color: transparent;
+  border-color: #707070;
+  color: #707070;
+}
+
+.submitBtn{
+  background-color: #0057be;
+  border-color: #0057be;
+  color: #ffffff;
+  &[disabled]{
+    color: #c5c5c5;
+    background-color: #154783;
+  }
+}
+.formDescription {
+  width: 600px;
+  text-align: left;
+  font-size: 15px;
+}
+.mat-dialog-content {
+  margin: 0 -50px;
+}
+.employeeWrapper {
+  height: 200px;
+  width: 600px;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-button {
+    width: 0px;
+    height: 0px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #6a6c6b;
+    border: 0px none #6a6c6b;
+    border-radius: 50px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #888888;
+  }
+  &::-webkit-scrollbar-thumb:active {
+    background: #363636;
+  }
+  &::-webkit-scrollbar-track {
+    background: #444645;
+    border: 0px none #ffffff;
+    border-radius: 50px;
+  }
+}
+.dialogWrapper {
+  padding: 20px;
+  background-color: #363837;
+  // border-radius: 10px;
+  height: 410px;
+  max-width: 680px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}

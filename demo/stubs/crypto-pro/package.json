@@ -1,0 +1,8 @@
+{
+  "name": "crypto-pro",
+  "version": "1.0.0",
+  "description": "Stub implementation of the crypto-pro (CAdES digital signature) package used by the @wbd/editor demo. Replace with the real package when deploying with CryptoPro CSP.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "license": "MIT"
+}

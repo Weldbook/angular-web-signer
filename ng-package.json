@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/ng-packagr/package.schema.json",
+  "lib": {
+    "entryFile": "src/public_api.ts"
+  },
+  "assets": [
+    {
+      "input": "src/assets/imgs",
+      "glob": "**/*",
+      "output": "assets/imgs"
+    },
+    {
+      "input": "src/assets",
+      "glob": "cadesplugin_api.js",
+      "output": "assets"
+    }
+  ],
+  "allowedNonPeerDependencies": ["tslib"]
+}

@@ -1,0 +1,18 @@
+<div class="dialogWrapper">
+
+<h1 mat-dialog-title>Выберите подписанта</h1>
+<div class="formDescription">
+  Подписанты предложены системой "ВЕЛДБУК", исходя из полного имени владельца сертификата
+</div>
+<div mat-dialog-content>
+  <div class="employeeWrapper">
+    <div *ngFor="let employeeRow of suggestedSigners" (click)="choseEmployee(employeeRow)" [class]="(employeeRow==chosenEmployee)?'chosen suggestedRow':'suggestedRow'" >
+      {{[employeeRow.fullName,employeeRow.positions.join(', ')].join(', ')}}
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close class="cancelBtn">Закрыть</button>
+  <button mat-button [mat-dialog-close]="chosenEmployee" [disabled]="chosenEmployee==null" class="submitBtn" cdkFocusInitial>Подтвердить</button>
+</div>
+</div>

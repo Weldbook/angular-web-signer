@@ -1,0 +1,79 @@
+{
+  "name": "@wbd/editor",
+  "version": "0.1.0",
+  "description": "Angular PDF editor library with annotation and digital signature support",
+  "keywords": [
+    "angular",
+    "pdf",
+    "editor",
+    "annotation",
+    "signature",
+    "cades",
+    "digital-signature"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wbd-editor/wbd-editor.git"
+  },
+  "license": "MIT",
+  "author": "wbd-editor contributors",
+  "bugs": {
+    "url": "https://github.com/wbd-editor/wbd-editor/issues"
+  },
+  "homepage": "https://github.com/wbd-editor/wbd-editor#readme",
+  "peerDependencies": {
+    "@angular/common": "^18.0.0",
+    "@angular/core": "^18.0.0",
+    "@angular/forms": "^18.0.0",
+    "@angular/material": "^18.0.0",
+    "@angular/router": "^18.0.0",
+    "@pdf-lib/fontkit": "^1.1.0",
+    "crypto-pro": "^2.5.0",
+    "moment": "^2.29.0",
+    "ng2-pdfjs-viewer": "^25.0.0",
+    "ngx-color-picker": "^16.0.0",
+    "pdf-lib": "^1.17.0 || ^2.0.0",
+    "rxjs": "~7.8.0",
+    "uuid": "^9.0.0 || ^10.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.6.0"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "scripts": {
+    "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
+    "build": "ng-packagr -p ng-package.json -c tsconfig.ng-packagr.json",
+    "demo:install": "cd demo && npm install",
+    "demo:serve": "cd demo && npm run serve",
+    "demo:build": "cd demo && npm run build",
+    "publish:lib": "npm run build && npm publish dist"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^18.2.0",
+    "@angular/animations": "^18.2.0",
+    "@angular/cdk": "^18.2.0",
+    "@angular/common": "^18.2.0",
+    "@angular/compiler": "^18.2.0",
+    "@angular/compiler-cli": "^18.2.0",
+    "@angular/core": "^18.2.0",
+    "@angular/forms": "^18.2.0",
+    "@angular/material": "^18.2.14",
+    "@angular/platform-browser": "^18.2.0",
+    "@angular/platform-browser-dynamic": "^18.2.0",
+    "@angular/router": "^18.2.0",
+    "@pdf-lib/fontkit": "^1.1.1",
+    "moment": "^2.30.0",
+    "ng-packagr": "^18.2.0",
+    "ng2-pdfjs-viewer": "^25.0.0",
+    "ngx-color-picker": "^16.0.0",
+    "pdf-lib": "^1.17.1",
+    "rxjs": "~7.8.0",
+    "typescript": "~5.5.0",
+    "uuid": "^10.0.0",
+    "zone.js": "~0.14.0"
+  }
+}

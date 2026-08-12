@@ -1,0 +1,78 @@
+<mat-icon class="closeIcon" (click)="close()">close</mat-icon>
+<div class="container">
+  <div class="leftSidebar">
+    <div class="header">
+      Результат проверки
+    </div>
+    <div class="fileData">
+      <strong style="font-size: 14px">Название документа:</strong>
+      <div>{{signatureData.fileData.name}}</div>
+    </div>
+    <mat-icon [svgIcon]="'appSvg:logo-white'" class="wbLogo"></mat-icon>
+  </div>
+  <div class="rightSidebar">
+    <div class="headerRow">
+      <div class="header">
+        Подпись {{signatureData.sigInfo.signatureName}}
+      </div>
+      <div class="separator">
+      </div>
+      <div [class.validSignature]="signatureData.sigInfo.isValid"
+           [class.invalidSignature]="!signatureData.sigInfo.isValid">
+        <mat-icon>{{signatureData.sigInfo.isValid ? 'thumb_up' : 'thumb_down'}}</mat-icon>
+        Подпись {{signatureData.sigInfo.isValid ? 'действительна' : 'недействительна'}}
+      </div>
+    </div>
+
+    <div class="fieldRow">
+      <!-- <div class="fieldNameBlack">Дополнительная информация:</div>
+      <div class="fieldValue">лорем ипум тут короче многамнога данных</div> -->
+    </div>
+
+    <div class="fieldsGroup">
+      <div class="fieldRow">
+        <div class="fieldNameBlack">Дополнительная информация о подписи:</div>
+      </div>
+      <div class="fieldRow">
+        <div class="fieldName">Формат подписи CAdES:</div>
+        <div class="fieldValue">Подпись в формате {{signatureData.sigInfo.signatureType}}</div>
+      </div>
+      <div class="fieldRow">
+        <div class="fieldName">Время подписи:</div>
+        <div class="fieldValue">{{signatureData.sigInfo.time}}</div>
+      </div>
+    </div>
+
+    <div class="fieldsGroup">
+      <div class="fieldRow">
+        <div class="fieldNameBlack">Информация о сертификате:</div>
+      </div>
+
+      <div class="fieldRow">
+        <div class="fieldName">Субъект:</div>
+        <div class="fieldValue">{{signatureData.certInfo.certSubject}}</div>
+      </div>
+      <div class="fieldRow">
+        <div class="fieldName">Издатель:</div>
+        <div class="fieldValue">{{signatureData.certInfo.certIssuer}}</div>
+      </div>
+      <div class="fieldRow">
+        <div class="fieldName">Серийный номер:</div>
+        <div class="fieldValue">{{signatureData.certInfo.certNumber}}</div>
+      </div>
+      <div class="fieldRow">
+        <div class="fieldName">Срок действия:</div>
+        <div class="fieldValue"> {{signatureData.certInfo.validFromDate}}
+          - {{signatureData.certInfo.validToDate}}</div>
+      </div>
+      <div class="fieldRow">
+        <div class="fieldName">Отпечаток сертификата:</div>
+        <div class="fieldValue">{{signatureData.certInfo.certThumb}}</div>
+      </div>
+    </div>
+
+
+  </div>
+
+
+</div>

@@ -1,0 +1,76 @@
+<div class="demo-shell">
+  <header class="demo-header">
+    <h1>&#64;wbd/editor — Demo</h1>
+    <p>
+      Angular PDF editor with annotation tools and digital signature support
+      (CAdES). This app wires up the library with demo providers so you can try
+      it without a backend.
+    </p>
+  </header>
+
+  <main class="demo-main">
+    <mat-card class="demo-card">
+      <mat-card-header>
+        <mat-card-title>Open a document in the editor</mat-card-title>
+        <mat-card-subtitle>
+          The demo stores the document in <code>localStorage</code> and navigates to
+          <code>/editor</code>, where the <code>&lt;wbd-editor&gt;</code> component
+          renders it inside a PDF.js viewer.
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="open-actions">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="openEditor('assets/sample.pdf', 'sample.pdf')"
+        >
+          <mat-icon>picture_as_pdf</mat-icon>
+          Open sample.pdf
+        </button>
+
+        <span class="or-separator">or</span>
+
+        <button mat-raised-button type="button" (click)="filePicker.click()">
+          <mat-icon>upload_file</mat-icon>
+          Open your own PDF
+        </button>
+        <input #filePicker type="file" accept="application/pdf" hidden (change)="openLocalFile($event)" />
+      </mat-card-content>
+      <mat-card-content>
+        <p class="hint">
+          Once the editor opens, use the toolbar above the document: pen,
+          highlight, rectangle, line, text, comment and signature / stamp
+          placeholders. Switch back to the cursor tool to move annotations;
+          double-click one to delete it.
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="demo-card" *ngIf="currentEditorFiles.length">
+      <mat-card-header>
+        <mat-card-title>Currently opened file(s)</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="demo-files">
+          <li *ngFor="let file of currentEditorFiles">
+            {{ file.filename }} — source: {{ file.source }} ({{ sourceType[file.sourceType!] }})
+          </li>
+        </ul>
+        <button mat-stroked-button (click)="clearFiles()">Clear editor state</button>
+      </mat-card-content>
+    </mat-card>
+
+    <section class="features">
+      <h2>What the library does</h2>
+      <div class="feature-grid">
+        <mat-card class="feature-card" *ngFor="let feature of features">
+          <mat-card-content>
+            <mat-icon class="feature-icon" [color]="'primary'">{{ feature.icon }}</mat-icon>
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.description }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </section>
+  </main>
+</div>

@@ -1,0 +1,220 @@
+<div class="bg-signing" *ngIf="creatingSignature"></div>
+<div class="container">
+  <div class="editor-files" *ngIf="editorFiles.length > -1">
+    <div *ngFor="let file of editorFiles; let i = index" class="editor-file-item" (click)="choseActiveDocument(i)">
+      <div class="editor-file-item-preview"></div>
+      <div class="editor-file-item-index">{{i + 1}}</div>
+      <mat-icon class="is-file-item-active" *ngIf="i == activeDocumentIndex">visibility</mat-icon>
+      <div class="file-item-bottom-tray">
+        <mat-icon class="is-file-item-verified" style="color:green" *ngIf="file.detachedSignatures.length > 0">thumb_up</mat-icon>
+        <mat-icon class="is-file-item-verified" style="color:yellow" *ngIf="file.signatures.length > 0" >thumb_up</mat-icon>
+        <mat-icon class="is-file-item-verified" *ngIf="file.signInProgress">border_color</mat-icon>
+      </div>
+    </div>
+  </div>
+
+  <div class="editor">
+    <ng-container *ngIf="frameLoaded">
+      <button class="menuBut" [matMenuTriggerFor]="menu">
+        <svg style="width: 16px; height:12px; " class="joints_icons">
+          <use [attr.xlink:href]="'/assets/imgs/icons_instruments_editor/editor_annotates/svg_icons.svg#menu'"></use>
+        </svg>
+      </button>
+      <mat-menu id="menuItem" style="min-width: 130px;" #menu="matMenu">
+        <button mat-menu-item >
+          <mat-icon class="my_svg_icon">
+            <svg class="user_menu_svg_icons">
+              <use [attr.xlink:href]="'/assets/imgs/svg_icons.svg#save'"></use>
+            </svg>
+          </mat-icon>
+          <span>Сохранить</span>
+        </button>
+        <button mat-menu-item  (click)="downloadRevisionVersion()" >
+          <mat-icon class="my_svg_icon lang">
+            <svg fill="rgb(127, 127, 127)" class="user_menu_svg_icons">
+            <use [attr.xlink:href]="'/assets/imgs/svg_icons.svg#download'"></use>
+          </svg>
+          </mat-icon>
+          <span>Скачать</span>
+        </button>
+        <button mat-menu-item  (click)="downloadRevisionSignature()" [disabled]="editorFiles[activeDocumentIndex].detachedSignatures.length == 0">
+          <mat-icon class="my_svg_icon lang">
+            <svg fill="rgb(127, 127, 127)" class="user_menu_svg_icons">
+            <use [attr.xlink:href]="'/assets/imgs/svg_icons.svg#download'"></use>
+          </svg>
+          </mat-icon>
+          <span>Подпись</span>
+        </button>
+
+        <button mat-menu-item [matMenuTriggerFor]="versionMenu">
+          <mat-icon style="margin-right: 7px!important;" class="my_svg_icon lang">
+            <i aria-hidden="true" class="fa fa-bars"></i>
+          </mat-icon>
+          <span>Версии</span>
+        </button>
+        <mat-menu id="versionsMenuItem" style="min-width: 130px;" #versionMenu="matMenu">
+          <button mat-menu-item *ngFor="let ver of allVersions" (click)="openVersion(ver.version)">
+            <span>
+              <mat-icon style="width: 10px;float: left" [svgIcon]="ver.version==currentVersion?'appSvg:fileAttachmentDone':''"></mat-icon>
+              <span>
+                <span> {{ver.userName}}</span>
+                <span style="font-size: 10px"> {{ver.date}}</span>
+              </span>
+            </span>
+          </button>
+        </mat-menu>
+        <button mat-menu-item (click)="closeFile()">
+          <mat-icon class="my_svg_icon">
+            <svg class="user_menu_svg_icons">
+              <use [attr.xlink:href]="'/assets/imgs/svg_icons.svg#close'"></use>
+            </svg>
+          </mat-icon>
+          <span style="color: rgba(0, 0, 0, 0.87);">Закрыть</span>
+        </button>
+      </mat-menu>
+
+      <div class="toolbar">
+        <div (click)="doAction($event.currentTarget, 'cursor')" class="cursor instr active"  matTooltip="Инструмент 'Курсор'" data-tooltype="cursor">
+          <svg style="width: 12px; height:16px; " class="joints_icons">
+            <use [attr.xlink:href]="'/assets/imgs/icons_instruments_editor/editor_annotates/svg_icons.svg#cursor'"></use>
+          </svg>
+        </div>
+        <div (click)="doAction($event.currentTarget, 'pen')" class="pen instr"  matTooltip="Инструмент 'Кисть'" data-tooltype="pen">
+          <svg style="width: 16px; height:16px; " class="joints_icons">
+            <use [attr.xlink:href]="'/assets/imgs/icons_instruments_editor/editor_annotates/svg_icons.svg#pen'"></use>
+          </svg>
+        </div>
+        <div class="highlight instr" (click)="doAction($event.currentTarget, 'highlight')"  matTooltip="Инструмент 'Выделение текста'" data-tooltype="highlight">
+          <svg style="width: 16px; height:16px; " class="joints_icons">
+            <use [attr.xlink:href]="'/assets/imgs/icons_instruments_editor/editor_annotates/svg_icons.svg#marker'"></use></svg>
+        </div>
+        <div class="text instr" (click)="doAction($event.currentTarget, 'text')"  matTooltip="Инструмент 'Текст'" data-tooltype="text">
+          <svg style="width: 16px; height:16px; " class="joints_icons">
+            <use [attr.xlink:href]="'/assets/imgs/icons_instruments_editor/editor_annotates/svg_icons.svg#text'"></use>
+          </svg>
+        </div>
+        <div class="rectangle instr" (click)="doAction($event.currentTarget, 'area')"  matTooltip="Инструмент 'Рамка'" data-tooltype="area">
+          <svg style="width: 18px; height:16px; " class="joints_icons">
+            <use [attr.xlink:href]="'/assets/imgs/icons_instruments_editor/editor_annotates/svg_icons.svg#rectangle'"></use>
+          </svg>
+        </div>
+        <div (click)="doAction($event.currentTarget, 'line')" class="strikeout instr"  matTooltip="Инструмент 'Линия'" data-tooltype="line">
+          <svg style="width: 16px; height:16px; " class="joints_icons">
+            <use [attr.xlink:href]="'/assets/imgs/icons_instruments_editor/editor_annotates/svg_icons.svg#line'"></use>
+          </svg>
+        </div>
+        <div class="rectangle instr" (click)="doAction($event.currentTarget, 'signature')"  matTooltip="Инструмент 'Подпись'" data-tooltype="signature">
+          <svg style="width: 28px; height: 20px; transform: scale(0.8);" class="joints_icons">
+            <use [attr.xlink:href]="'/assets/imgs/icons_instruments_editor/editor_annotates/svg_icons.svg#signature'"></use>
+          </svg>
+        </div>
+        <div class="rectangle instr" (click)="doAction($event.currentTarget, 'stamp')"  matTooltip="Инструмент 'Штамп'" data-tooltype="stamp">
+          <svg style="width: 28px; height: 20px; transform: scale(0.8);" class="joints_icons">
+            <use [attr.xlink:href]="'/assets/imgs/icons_instruments_editor/editor_annotates/svg_icons.svg#signature'"></use>
+          </svg>
+        </div>
+        <div class= "instr" (click)="doAction($event.currentTarget, 'point')"  matTooltip="Инструмент 'Комментарий'" data-tooltype="point">
+          <svg style="width: 16px; height:16px; " class="joints_icons">
+            <use [attr.xlink:href]="'/assets/imgs/icons_instruments_editor/editor_annotates/svg_icons.svg#comment'"></use>
+          </svg>
+        </div>
+
+        <div class="colors">
+          <ng-container *ngIf="currentActiveColor">
+            <input (colorPickerChange)="changeInst(currentActionActive, {color: $event})" [(colorPicker)]="currentActiveColor" [style.background]="currentActiveColor" class="color1 colorHover">
+            <input disabled (colorPickerChange)="changeInst(currentActionActive, {color: $event})" [(colorPicker)]="currentActiveColor" [style.background]="'#04aa00'" class="color2 colorHover">
+          </ng-container>
+          <ng-container *ngIf="!currentActiveColor">
+            <input disabled [style.background]="'red'" class="color1 line-color">
+            <input disabled [style.background]="'#04aa00'" class="color2 line-color">
+            <ng-container *ngIf="currentActionActive && currentActionActive !== ''">
+              <p [style.margin-left]="'11px'" [style.opacity]="0.5">{{instruments[currentActionActive+'2']}}</p>
+            </ng-container>
+          </ng-container>
+        </div>
+
+        <div class="sizes">
+          <ng-container *ngIf="currentActiveSize">
+            <ng-container *ngIf="currentActionActive === 'pen'">
+              <mat-slider [style.margin-left]="'3px'" min="1" max="12" step="0.5">
+                <input matSliderThumb name="penSize" (valueChange)="changeInst(currentActionActive, {size: $event})" [(ngModel)]="penSize">
+              </mat-slider>
+              <div class="valueNow">{{penSize}}</div>
+            </ng-container>
+            <ng-container *ngIf="currentActionActive !== 'pen'">
+              <p>Размер {{instruments[currentActionActive + '1']}}:</p>
+              <select class="text-size valueNow" (change)="changeInst(currentActionActive ,{size : $event.target['value']})" value="{{currentActiveSize}}">
+                <option *ngFor="let i of sizeText" value="{{i}}">{{i}}
+                </option>
+              </select>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+
+    <div style="overflow: hidden;width:100%;height: 100%">
+      <ng2-pdfjs-viewer #pdfViewer [openFile]="false" [viewBookmark]="false" [showSpinner]="true" [download]="false"
+                        ></ng2-pdfjs-viewer>
+    </div>
+  </div>
+
+  <div class="sign-field" *ngIf="frameLoaded">
+    <button class="sign-btn">
+      <span>Подписать документ</span>
+    </button>
+
+<!--    <div class="icon-container">-->
+<!--      <span class="icon-container-title">Выберите логотип для подписи</span>-->
+<!--      <div class="icon-list">-->
+<!--        <button [ngClass]="iconOrganization === 'ngs'-->
+<!--                  ? 'btn-organization selected-icon-organization'-->
+<!--                  : 'btn-organization'"-->
+<!--                (click)="setOrganizationIcon('ngs')">-->
+<!--          <img class="icon-organization" src="/assets/icons/ngs.svg">-->
+<!--        </button>-->
+<!--        <button [ngClass]="iconOrganization === 'rennesans'-->
+<!--                  ? 'btn-organization selected-icon-organization'-->
+<!--                  : 'btn-organization'"-->
+<!--                (click)="setOrganizationIcon('rennesans')">-->
+<!--          <img class="icon-organization" src="/assets/imgs/rennesans.png">-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+
+    <div [ngClass]="!signErrors.length ? 'sign-container-without-error' : 'sign-container'">
+      <div class="certificates">
+        <ng-container *ngFor="let certificate of certificates">
+          <button class="certificate-btn"
+            (click)="createSign(certificate)"
+            [ngClass]="certificate['isValidCertificate'] ? 'certificate-valid' : 'certificate-invalid'"
+            [disabled]="!certificate['isValidCertificate']">
+            <p class="certificate-name">
+              {{certificate['subjectData'].SN ? certificate['subjectData'].SN : certificate.name}}
+            </p>
+            <span class="certificate-date">Действителен до {{certificate.validTo}}</span>
+          </button>
+        </ng-container>
+      </div>
+
+      <hr class="separator" *ngIf="signErrors.length">
+
+      <div class="sign-errors" *ngIf="signErrors.length">
+        <span class="sign-error-title">Ошибки подписи</span>
+        <div class="sign-error-scroll-container">
+          <ng-container *ngFor="let error of signErrors">
+            <button class="sign-error-btn" disabled>
+              <p class="sign-error-name">{{error?.fieldValue?.Name}}</p>
+              <span class="sign-error-message">Подпись недействительна</span>
+            </button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="loader">
+    <mat-spinner style="margin: 0 auto; z-index: 1010;" [diameter]="50" *ngIf="creatingSignature"></mat-spinner>
+  </div>
+</div>
