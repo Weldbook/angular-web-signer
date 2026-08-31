@@ -1,0 +1,78 @@
+.closeIcon {
+  position: absolute;
+  right: 35px;
+  top: 30px;
+  font-size: 30px;
+  color: #777777;
+  cursor: pointer;
+}
+
+.container {
+  color: #363636;
+  width: 520px;
+  max-width: 90vw;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 12px;
+
+  .header {
+    font-size: 22px;
+    font-weight: 700;
+    margin-top: 16px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    .label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1851a0;
+    }
+
+    .input {
+      font-size: 14px;
+      padding: 8px 10px;
+      border: 1px solid #c5c5c5;
+      border-radius: 4px;
+      background: #fff;
+      color: #363636;
+
+      &:focus {
+        outline: none;
+        border-color: #1851a0;
+      }
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #777777;
+    }
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e0e0;
+
+    .resetBtn {
+      margin-right: auto;
+      color: #777777;
+      font-size: 12px;
+    }
+
+    .saveBtn {
+      background: #1851a0;
+      color: white;
+      font-weight: 700;
+    }
+  }
+}

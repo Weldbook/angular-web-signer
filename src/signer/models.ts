@@ -12,6 +12,30 @@ export interface DataFileForSign {
   certificateValidTo: string;
 }
 
+export interface Licenses {
+  tsp: {
+    validTo: string,
+    serialNumber: null,
+    firstInstall: string,
+    licType: string,
+    companyName: string,
+  },
+  ocsp: {
+    validTo: string,
+    serialNumber: string,
+    firstInstall: string,
+    licType: string,
+    companyName: string,
+  },
+  csp: {
+    validTo: string,
+    serialNumber: string,
+    firstInstall: string,
+    licType: string,
+    companyName: string,
+  },
+}
+
 export interface ExtendedCertificate extends Certificate {
   subjectData: any;
   certificateNumber: string;

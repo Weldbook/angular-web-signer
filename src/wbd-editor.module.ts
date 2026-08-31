@@ -10,6 +10,7 @@ import { PdfJsViewerModule } from "ng2-pdfjs-viewer";
 import { CloseFileComponent } from './components/close-file/close-file.component';
 import { WbSuggestedEmployeesComponent } from './components/wb-suggested-employees/wb-suggested-employees.component';
 import { SignatureInfoComponent } from './components/signature-info/signature-info.component';
+import { SettingsComponent } from './components/settings/settings.component';
 import { EditorComponent } from './editor.component';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,12 +21,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { EditorSignerService } from './editor-signer.service';
+import { PdfVisibleSignaturePlacer } from './signer/pdf-visible-signature-placer';
+import { SignerSettingsService } from './signer/signer-settings.service';
 import {
   WBD_EDITOR_CONFIG,
   WBD_COMMENTS,
   WBD_ANNOTATIONS_OBJECT,
   WBD_DOWNLOAD,
   WBD_EDITOR_ANNOTATES,
+  WBD_VISIBLE_SIGNATURE_PLACER,
 } from './editor-tokens';
 import { EditorAnnotateModule } from './wb-editor-annotates/src/public-api';
 
@@ -52,6 +56,7 @@ export interface WbdEditorConfig {
       SaveFileNotificationComponent,
       CloseFileComponent,
       SignatureInfoComponent,
+      SettingsComponent,
   ],
   imports: [
       CommonModule,
@@ -68,7 +73,11 @@ export interface WbdEditorConfig {
       EditorAnnotateModule,
       MatSnackBarModule,
   ],
-  providers: [EditorSignerService],
+  providers: [
+    EditorSignerService,
+    SignerSettingsService,
+    { provide: WBD_VISIBLE_SIGNATURE_PLACER, useClass: PdfVisibleSignaturePlacer },
+  ],
   exports: [
     EditorComponent,
     WbdEditorAnnotateComponent,
@@ -76,6 +85,7 @@ export interface WbdEditorConfig {
     CloseFileComponent,
     WbSuggestedEmployeesComponent,
     SignatureInfoComponent,
+    SettingsComponent,
   ],
 })
 export class WbdEditorModule {

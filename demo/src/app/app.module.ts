@@ -1,14 +1,18 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import {
   WBD_DOWNLOAD,
   WBD_EDITOR_ANNOTATES,
+  WBD_SNACKBAR_SERVICE,
   WbdEditorModule,
   EditorAnnotateModule,
   EditorAnnotates,
@@ -17,17 +21,20 @@ import {
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './home/home.component';
+import { DiTestComponent } from './di-test/di-test.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent],
+  declarations: [AppComponent, HomeComponent, DiTestComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    FormsModule,
     MatButtonModule,
     MatCardModule,
     EditorAnnotateModule,
     MatIconModule,
+    MatListModule,
     // AppRoutingModule must be imported BEFORE WbdEditorModule: the library
     // registers its own `''` route (EditorComponent), so our root redirect to
     // the landing page has to win route-order precedence.
@@ -39,6 +46,7 @@ import { HomeComponent } from './home/home.component';
       apiUrl: '',
       extraProviders: [
         { provide: WBD_EDITOR_ANNOTATES, useClass: EditorAnnotates },
+        { provide: WBD_SNACKBAR_SERVICE, useExisting: MatSnackBar },
         {
           provide: WBD_DOWNLOAD,
           useValue: (data: any, filename: string = 'download.pdf') => {

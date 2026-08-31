@@ -22,6 +22,7 @@ import { HttpClient } from '@angular/common/http';
 import { CloseFileComponent } from '../close-file/close-file.component';
 import { WbSuggestedEmployeesComponent } from '../wb-suggested-employees/wb-suggested-employees.component';
 import { SignatureInfoComponent } from '../signature-info/signature-info.component';
+import { SettingsComponent } from '../settings/settings.component';
 import { filter } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -496,6 +497,7 @@ export class WbdEditorAnnotateComponent implements OnInit {
           this.snack.open('Ошибка', 'Ошибка подписания!');
           continue;
         }
+        debugger
         let documentVisualSigContent = signedData['documentVisualSigContent'];
         let signatureContent = signedData['signatureContent'];
         let documentContent = signedData['documentContent'];
@@ -512,11 +514,16 @@ export class WbdEditorAnnotateComponent implements OnInit {
     }
     this.creatingSignature = false;
     let newEditorDocs = this.editorFiles.map((x: EditorDocument) => {
-      x.signedContent = (new Uint8Array(x.signedContent)).toBase64();
+      if (x.signedContent)
+        x.signedContent = (new Uint8Array(x.signedContent)).toBase64();
       return x;
     });
     localStorage.setItem('editorFiles', JSON.stringify(newEditorDocs));
     this.ngOnInit();
+  }
+
+  openSettings(): void {
+    this.dialog.open(SettingsComponent, { width: '600px' });
   }
 
   showError(message: string, e?: Error): void {

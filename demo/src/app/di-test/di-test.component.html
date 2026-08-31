@@ -1,0 +1,112 @@
+<div class="di-shell">
+  <header class="di-header">
+    <h1>DI test rig</h1>
+    <p>
+      Exercise the DI-injected pieces of <code>&#64;wbd/editor</code> at runtime.
+      Each test resolves the token / class exactly as the production app does
+      (same injector, same root providers) and reports what implementation you
+      actually got and whether it works.
+    </p>
+  </header>
+
+  <main class="di-main">
+    <mat-card class="di-card">
+      <mat-card-header>
+        <mat-card-title>Persisted signer settings</mat-card-title>
+        <mat-card-subtitle class="settings-summary">{{settingsSummary}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="settings-grid">
+          <label class="field">
+            <span class="field-label">Signature type</span>
+            <select [(ngModel)]="settings.signatureType" (ngModelChange)="onTypeChange()">
+              <ng-container *ngFor="let type of signatureTypes">
+                <option [value]="type">{{type}}</option>
+              </ng-container>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field-label">TSP server URL</span>
+            <input type="text" placeholder="https://tsp.example.ru/tsp.srf"
+                   [(ngModel)]="settings.tspUrl" (ngModelChange)="onUrlChange()">
+          </label>
+          <label class="field">
+            <span class="field-label">OCSP server URL</span>
+            <input type="text" placeholder="https://ocsp.example.ru/ocsp.srf"
+                   [(ngModel)]="settings.ocspUrl" (ngModelChange)="onUrlChange()">
+          </label>
+          <div class="settings-actions">
+            <button mat-stroked-button (click)="resetSettings()">Reset defaults</button>
+            <button mat-stroked-button [disabled]="!settingsDirty" (click)="saveSettings()">
+              {{settingsDirty ? 'Save overrides' : 'Saved'}}
+            </button>
+          </div>
+        </div>
+        <p class="hint">
+          The <code>SignerSettingsService</code> test below writes a temporary value and reads it
+          back through <code>localStorage</code>. The current settings in the table above are left
+          untouched.
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="di-card">
+      <mat-card-header>
+        <div class="card-header-row">
+          <div>
+            <mat-card-title>Injected dependency checklist</mat-card-title>
+            <mat-card-subtitle>
+              Tokens and classes resolved from the app injector:
+              WBD_VISIBLE_SIGNATURE_PLACER, WBD_EDITOR_ANNOTATES, WBD_SNACKBAR_SERVICE, WBD_DOWNLOAD,
+              WBD_ANNOTATIONS_OBJECT, WBD_COMMENTS, SignerSettingsService, EditorSignerService.
+            </mat-card-subtitle>
+          </div>
+          <button mat-raised-button color="primary"
+                  [disabled]="running"
+                  (click)="runAll()">
+            <mat-icon>play_circle</mat-icon>
+            {{running ? 'Running…' : 'Run all tests'}}
+          </button>
+        </div>
+        <div class="card-footer-row" *ngIf="results.length">
+          <span class="summary passed">{{passedCount}} passed</span>
+          <span class="summary failed" *ngIf="failedCount">{{failedCount}} failed</span>
+          <button mat-stroked-button (click)="clearResults()">Clear</button>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list class="test-list" *ngIf="results.length; else noResults">
+          <h3 mat-list-header>Results</h3>
+          <mat-list-item *ngFor="let result of results" [class.passed]="result.passed" [class.failed]="!result.passed">
+            <mat-icon mat-list-icon class="status" [color]="result.passed ? 'primary' : 'warn'">
+              {{result.passed ? 'check_circle' : 'cancel'}}
+            </mat-icon>
+            <div mat-line class="test-label">
+              {{result.label}}
+              <span class="test-target">[{{result.target}}]</span>
+            </div>
+            <div mat-line class="test-message">{{result.message}}</div>
+            <div mat-line class="test-duration">{{result.durationMs}} ms</div>
+          </mat-list-item>
+        </mat-list>
+
+        <ng-template #noResults>
+          <p class="hint">
+            No results yet. Run the tests to verify every DI provider this library and the demo
+            exchange, and to execute the real signature-stamping implementation on a generated PDF.
+          </p>
+          <div class="tests-table">
+            <div class="tests-table-header">
+              <span>What is checked</span>
+              <span>Provider</span>
+            </div>
+            <div class="tests-table-row" *ngFor="let test of tests">
+              <span>{{test.label}}</span>
+              <code>{{test.target}}</code>
+            </div>
+          </div>
+        </ng-template>
+      </mat-card-content>
+    </mat-card>
+  </main>
+</div>

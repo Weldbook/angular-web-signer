@@ -1,5 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import { EditorAnnotates } from './wb-editor-annotates/src/lib/editor-annotate/editorAnnotates';
+import { VisibleSignaturePlacer } from './signer/visible-signature-placer';
 
 /**
  * Snackbar interface for showing notifications.
@@ -106,3 +107,15 @@ export const WBD_EDITOR_ANNOTATES = new InjectionToken<EditorAnnotates>('WBD_EDI
  * Provide your own snackbar implementation or use Angular Material's MatSnackBar directly.
  */
 export const WBD_SNACKBAR_COMPONENT = new InjectionToken<any>('WBD_SNACKBAR_COMPONENT');
+
+/**
+ * Visible signature placer.
+ * Provides the implementation that draws a visual signature into a PDF.
+ * Override with your own implementation to customize the visual signature.
+ *
+ * @example
+ * providers: [
+ *   { provide: WBD_VISIBLE_SIGNATURE_PLACER, useClass: MyVisibleSignaturePlacer },
+ * ]
+ */
+export const WBD_VISIBLE_SIGNATURE_PLACER = new InjectionToken<VisibleSignaturePlacer>('WBD_VISIBLE_SIGNATURE_PLACER');

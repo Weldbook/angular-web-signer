@@ -44,7 +44,7 @@ export class HomeComponent {
     },
   ];
 
-  constructor(private router: Router) {}
+  constructor(public router: Router) {}
 
   openEditor(source: string, filename: string): void {
     const doc = new EditorDocument({

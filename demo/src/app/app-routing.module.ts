@@ -5,8 +5,11 @@ import { EditorComponent } from '@wbd/editor';
 
 import { HomeComponent } from './home/home.component';
 
+import { DiTestComponent } from './di-test/di-test.component';
+
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
+  { path: 'di-test', component: DiTestComponent },
   // The editor's own routing module also registers a '' route for EditorComponent,
   // so redirecting the root path away keeps the landing page on Home.
   { path: 'editor', component: EditorComponent },

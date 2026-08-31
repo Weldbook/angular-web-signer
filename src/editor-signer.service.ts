@@ -4,10 +4,11 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable, map, from } from 'rxjs';
 import { getUserCertificates, Certificate } from 'crypto-pro';
 import moment from 'moment';
-import { WBD_EDITOR_CONFIG } from './editor-tokens';
+import { WBD_EDITOR_CONFIG, WBD_VISIBLE_SIGNATURE_PLACER } from './editor-tokens';
 import { CadesHelper, arrayBufferToBase64 } from './signer/cades.helper';
-import { PdfSignatureHelper } from './signer/pdf-signature.helper';
 import { DataFileForSign, ExtendedCertificate, SignatureObject } from './signer/models';
+import { VisibleSignaturePlacer } from './signer/visible-signature-placer';
+import { SignerSettingsService } from './signer/signer-settings.service';
 
 @Injectable()
 export class EditorSignerService {
@@ -15,7 +16,9 @@ export class EditorSignerService {
 
   constructor(
     private http: HttpClient,
-    @Inject(WBD_EDITOR_CONFIG) config: { signerServiceUrl?: string; apiUrl?: string }
+    @Inject(WBD_EDITOR_CONFIG) config: { signerServiceUrl?: string; apiUrl?: string },
+    @Inject(WBD_VISIBLE_SIGNATURE_PLACER) public visibleSignaturePlacer: VisibleSignaturePlacer,
+    public signerSettingsService: SignerSettingsService
   ) {
     this.signerServiceUrl = config?.signerServiceUrl || '';
   }
@@ -43,12 +46,18 @@ export class EditorSignerService {
     return CadesHelper.generateHash(base64Data, certificate);
   }
 
-  signHash(hash: string, certificate: Certificate, licenses = null, basedSignature = null): Promise<string> {
-    return CadesHelper.signHash(hash, certificate, licenses, basedSignature);
+  signHash(
+    hash: string,
+    certificate: Certificate,
+    licenses = null,
+    basedSignature = null,
+    tspUrl?: string
+  ): Promise<string> {
+    return CadesHelper.signHash(hash, certificate, licenses, basedSignature, tspUrl);
   }
 
-  placeVisibleSignature(documentContent: ArrayBuffer, currentSign: SignatureObject, certificateObj: Certificate) {
-    return PdfSignatureHelper.placeVisibleSignature(documentContent, currentSign, certificateObj);
+  placeVisibleSignature(documentContent: ArrayBuffer, currentSign: SignatureObject, certificateObj: ExtendedCertificate) {
+    return this.visibleSignaturePlacer.placeVisibleSignature(documentContent, currentSign, certificateObj);
   }
 
   async createSign(
@@ -72,28 +81,25 @@ export class EditorSignerService {
           .reduce((o, key) => ({ ...o, [key[0]]: key[1] }), {});
         console.log(certificateObj._cadesCertificate, 'объект данных сертификата');
         let signatureName;
-
         if (currentSign.fieldName) {
           signatureName = currentSign.fieldName;
         }
-        let documentVisualSigContent = await PdfSignatureHelper.placeVisibleSignature(
-          visualSignedDocument || documentContent,
-          currentSign,
-          certificateObj
-        );
-        console.log('VisualSignedFile obtained');
-
-        // END of placing image
-
         const b64encoded = arrayBufferToBase64(documentContent);
         let hash = await CadesHelper.generateHash(b64encoded, certificate);
-        let signatureContent = await CadesHelper.signHash(hash, certificate, licenses, oldSignature);
+        const signerSettings = this.signerSettingsService.getSettings();
+        const tspUrl = signerSettings.signatureType === 'CADES_T' ? signerSettings.tspUrl : '';
+        let signatureContent = await CadesHelper.signHash(hash, certificate, licenses, oldSignature, tspUrl);
         if (!signatureContent) {
           return false;
         }
-
         console.log('signatureContent created');
-
+        let documentVisualSigContent = await this.visibleSignaturePlacer.placeVisibleSignature(
+                 visualSignedDocument || documentContent,
+                 currentSign,
+                 certificateObj
+               );
+               console.log('VisualSignedFile obtained');
+        // END of placing image
         return {
           documentContent,
           signatureContent,
@@ -104,21 +110,6 @@ export class EditorSignerService {
       console.error(error);
     }
     return false;
-  }
-
-  sendFileForSign(data: DataFileForSign): Observable<any> {
-    const formData = new FormData();
-    formData.append('userFile', data.file, data.fileName);
-    formData.append('rect', data.rect.join('|'));
-    formData.append('page', data.page);
-    formData.append('certificateNumber', data.certificateNumber);
-    formData.append('certificateValidFrom', data.certificateValidFrom);
-    formData.append('certificateValidTo', data.certificateValidTo);
-    formData.append('signerData', data.signerData);
-    if (data.signatureName) {
-      formData.append('signName', data.signatureName);
-    }
-    return this.http.post(this.signerServiceUrl + '/signer/placeImageSignature', formData);
   }
 }
 

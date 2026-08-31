@@ -1,0 +1,32 @@
+<mat-icon class="closeIcon" (click)="close()">close</mat-icon>
+<div class="container">
+  <div class="header">Настройки подписания</div>
+
+  <div class="field">
+    <label class="label" for="signatureType">Тип подписи</label>
+    <select id="signatureType" class="input" [(ngModel)]="form.signatureType">
+      <ng-container *ngFor="let type of signatureTypes">
+        <option [value]="type">{{type}}</option>
+      </ng-container>
+    </select>
+    <div class="hint">CADES_BES — базовая электронная подпись, CADES_T — длинная подпись с временн&#243;й меткой.</div>
+  </div>
+
+  <div class="field">
+    <label class="label" for="tspUrl">Сервер TSP</label>
+    <input id="tspUrl" class="input" type="text" placeholder="https://tsp.example.ru/tsp.srf" [(ngModel)]="form.tspUrl">
+    <div class="hint">Сервер временн&#243;й штампов (используется для CADES_T).</div>
+  </div>
+
+  <div class="field">
+    <label class="label" for="ocspUrl">Сервер OCSP</label>
+    <input id="ocspUrl" class="input" type="text" placeholder="https://ocsp.example.ru/ocsp.srf" [(ngModel)]="form.ocspUrl">
+    <div class="hint">Сервер проверки статуса сертификата (OCSP).</div>
+  </div>
+
+  <div class="actions">
+    <button mat-button class="resetBtn" (click)="resetDefaults()">Сбросить по умолчанию</button>
+    <button mat-button (click)="close()">Отмена</button>
+    <button mat-raised-button class="saveBtn" (click)="save()">Сохранить</button>
+  </div>
+</div>

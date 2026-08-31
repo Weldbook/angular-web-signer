@@ -34,6 +34,7 @@
     "ngx-color-picker": "^16.0.0",
     "pdf-lib": "^1.17.0 || ^2.0.0",
     "rxjs": "~7.8.0",
+    "material-design-icons-iconfont": "^6.7.0",
     "uuid": "^9.0.0 || ^10.0.0"
   },
   "dependencies": {
@@ -50,6 +51,8 @@
     "demo:install": "cd demo && npm install",
     "demo:serve": "cd demo && npm run serve",
     "demo:build": "cd demo && npm run build",
+    "test:setup": "npm run build && npm run demo:install && npm run demo:build",
+    "test": "npm run test:setup",
     "publish:lib": "npm run build && npm publish dist"
   },
   "devDependencies": {

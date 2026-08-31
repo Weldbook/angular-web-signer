@@ -46,6 +46,22 @@
       </mat-card-content>
     </mat-card>
 
+    <mat-card class="demo-card">
+      <mat-card-header>
+        <mat-card-title>Test your DI-injected classes</mat-card-title>
+        <mat-card-subtitle>
+          Run the DI test rig: it resolves every token this demo provides
+          (VisibleSignaturePlacer, EditorAnnotates, Snackbar, Download, settings)
+          and executes the real signature-stamping implementation.
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-raised-button color="primary" (click)="router.navigate(['/di-test'])">
+          <mat-icon>build</mat-icon> Open DI test rig
+        </button>
+      </mat-card-content>
+    </mat-card>
+
     <mat-card class="demo-card" *ngIf="currentEditorFiles.length">
       <mat-card-header>
         <mat-card-title>Currently opened file(s)</mat-card-title>
